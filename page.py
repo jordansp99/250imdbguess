@@ -41,7 +41,6 @@ df = load_data()
 
 if 'film_to_guess' not in st.session_state:
     st.session_state['film_to_guess'] = df['Film Name'].sample().iloc[0] #get random films
-
 if 'clues_shown' not in st.session_state:
     st.session_state['clues_shown'] = 1
 if 'win' not in st.session_state:
@@ -50,8 +49,6 @@ if 'win' not in st.session_state:
 
 film_name = st.session_state['film_to_guess'] #film name Session state saved in variable
 
-
-
 clues = df.loc[df['Film Name'] == film_name, 'Clues'].squeeze()
 film_year = df.loc[df['Film Name'] == film_name, 'Film Year'].squeeze()
 
@@ -59,10 +56,6 @@ heading = st.markdown("# Guess the film")
 st.write(f"Clues {st.session_state['clues_shown']}/5")
 
 
-
-
-
-    
 with st.form("my_form",clear_on_submit=True):
     st.markdown(f"### Year: {film_year}")
 
@@ -99,7 +92,8 @@ with st.form("my_form",clear_on_submit=True):
         if st.session_state['clues_shown'] == len(clues) and not st.session_state["win"]:
                 st.warning(f"The correct film was {st.session_state['film_to_guess']}")
 
-            
+with st.expander("Info", icon="ℹ️"):
+    st.info("The clues were generated with gemma-2-2b. Web app was developed using Streamlit.")            
         
  
             
