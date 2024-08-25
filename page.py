@@ -1,14 +1,16 @@
 import csv
+import random
 import streamlit as st
 import json
 import re
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 @st.cache_data
 def load_data():
-    with open('clues.json', 'r',encoding='utf-8') as file:
-        data = json.load(file)
+    with open('clues.json', 'r') as file:
+        data = json.load(file)      
         df = pd.DataFrame(columns=['Film Name', 'Clues','Film Year'])
     # Iterate over each film in the JSON data
     for film in data:
@@ -33,14 +35,32 @@ def load_data():
             df.loc[df['Film Name'] == film_name, 'Film Year'] = film_year
             
     return df
-    
+def random_number_based_on_today(start, end):
+    # Get today's date
+
+    today = datetime.today()
+
+    # Convert today's date to an integer seed
+    seed = int(today.strftime('%Y%m%d'))
+    print(seed)
+
+    # Set the random seed
+    random.seed(seed)
+
+    # Generate and return a random number within the specified range
+    return random.randint(start, end)
 
 
+st.write(datetime.today())
         
 df = load_data()
 
+
+random_num = random_number_based_on_today(0, len(df))
+print (random_num)
+
 if 'film_to_guess' not in st.session_state:
-    st.session_state['film_to_guess'] = df['Film Name'].sample().iloc[0] #get random films
+    st.session_state['film_to_guess'] = df['Film Name'].iloc[random_num] #get random films
 if 'clues_shown' not in st.session_state:
     st.session_state['clues_shown'] = 1
 if 'win' not in st.session_state:
