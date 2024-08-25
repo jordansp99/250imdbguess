@@ -50,8 +50,6 @@ def random_number_based_on_today(start, end):
     # Generate and return a random number within the specified range
     return random.randint(start, end)
 
-
-st.write(datetime.today())
         
 df = load_data()
 
