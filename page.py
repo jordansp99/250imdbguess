@@ -42,7 +42,6 @@ def random_number_based_on_today(start, end):
 
     # Convert today's date to an integer seed
     seed = int(today.strftime('%Y%m%d'))
-    print(seed)
 
     # Set the random seed
     random.seed(seed)
@@ -55,7 +54,6 @@ df = load_data()
 
 
 random_num = random_number_based_on_today(0, len(df))
-print (random_num)
 
 if 'film_to_guess' not in st.session_state:
     st.session_state['film_to_guess'] = df['Film Name'].iloc[random_num] #get random films
@@ -80,6 +78,7 @@ with st.form("my_form",clear_on_submit=True):
     for i in range(st.session_state['clues_shown']):
         
         st.write(f"Clue {i + 1}: {clues[i]}\n")
+
     st.divider()
     # Select box for user to guess the film
     option = st.selectbox(
@@ -92,26 +91,30 @@ with st.form("my_form",clear_on_submit=True):
 
     submit_form = st.form_submit_button("Submit")
 
-
     if submit_form:
-        print (st.session_state["win"])
-  
+        
+
         if st.session_state['film_to_guess'] == option:
             st.session_state["win"] = True
-            st.success("Congratulations! You won!")
-                        
-            st.balloons()
+            st.session_state['clues_shown'] = 5
+            print (f"Win: {st.session_state["win"]}")
+            st.rerun()
+
+
         if st.session_state['clues_shown'] < len(clues) and not st.session_state["win"]:
             st.session_state['clues_shown'] += 1
-            print(st.session_state['clues_shown'])
+            print(f"Clues shown: {st.session_state['clues_shown']}")
             print("rerun")
             st.rerun()
         
         if st.session_state['clues_shown'] == len(clues) and not st.session_state["win"]:
-                st.warning(f"The correct film was {st.session_state['film_to_guess']}")
+                st.error(f"The correct film was {st.session_state['film_to_guess']}.")
+
+if st.session_state["win"] == True:
+
+    st.success(f"The correct film was {film_name}.")
+    st.balloons()
 
 with st.expander("Info", icon="ℹ️"):
     st.info("The clues were generated with gemma-2-2b. Web app was developed using Streamlit.")            
         
- 
-            
